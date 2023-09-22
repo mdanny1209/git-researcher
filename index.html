@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+    <title >github search tool</title>
+    <!-- <link rel="stylesheet" href="index.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> 
+    <script src="index.js"></script>
+</head>
+
+<body id="t" class="offline">
+    <label for="monNum">month:</label><br>
+    <input type="number" id="monNum" name="monNum" value="1"><br>
+    <label for="codeLang">language:</label><br>
+    <input type="text" id="codeLang" name="codeLang" value="go"><br>
+    <label for="searchKey">search keyword:</label><br>
+    <input type="text" id="searchKey" name="searchKey" value="blockchain"><br>
+    <button onclick="SearchRepo()">Search</button>
+    <div id="resultDiv"></div>
+</body>
+    
+</html>
