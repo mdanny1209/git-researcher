@@ -116,7 +116,6 @@ async function SearchRepo() {
         const repositories = await getRepositories(keyword, language, j);
 
         for (const repo of repositories) {
-            repo.full_name = "umee-network/umee"
             const commitsLastMonth = await getCommitsCount(repo.full_name, month);
 
             if (commitsLastMonth > 0) {
