@@ -34,6 +34,7 @@ As you know, github api call send the result with pagination.
 
 
 With this, you can get the repostories with `keyword` and `language` sorted by updated date.
+### 2. How to get last month commits count
 Now it's time to get the last month's commit count for the new projects or alive projects.
 
 ``` javascript
@@ -51,6 +52,8 @@ This github api returns the weekly commits count sorted by time(asc).
 
 So if you want the last commit count, you can sum the last 5 weeks' commits count. (if the length is below 5, then return total value.)
 
+
+### 3. How to get contributors' email info
 Now, we got the repositories and last month commits count.
 So what's remaining? Yep, that is the contributor's email.
 Let's continue. How can we get the contributor's email?
@@ -74,6 +77,7 @@ for (var i = 1; i <= ((commitCount + 99) / 100); i++) {
 }
 ```
 
+### 4. Download the search result
 So we got the repositories, commits count, and contributors' email. What's next?
 Yeah, convert the data to csv and let's download the csv file.
 
