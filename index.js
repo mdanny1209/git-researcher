@@ -3,14 +3,19 @@ const sleepNow = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
 var repoInfo = []
 
-const sleepTime = 5000
+const sleepTime = 15000
+const my_token = "GITHUB_TOKEN"
 
 async function getRepositories(keyword, language, page_index) {
     await sleepNow(sleepTime)
     const searchQuery = `q=${keyword}+language:${language}`;
     const searchUrl = `https://api.github.com/search/repositories?${searchQuery}&per_page=100&sort=updated&order=desc&page=${page_index}`;
 
-    const response = await fetch(searchUrl);
+    const response = await fetch(searchUrl, {
+        'headers': {
+          'Authorization': `token ${my_token}` 
+        }
+    });
     const data = await response.json();
 
     return data.items;
@@ -20,7 +25,11 @@ const getCommitsCount = async (fullname, month) => {
     await sleepNow(sleepTime)
     console.log(fullname)
     const url = `https://api.github.com/repos/${fullname}/stats/commit_activity`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        'headers': {
+          'Authorization': `token ${my_token}` 
+        }
+    });
     const data = await response.json();
 
     lastMonthCommits = 0
@@ -35,7 +44,11 @@ const getCommitsAuthors = async (fullname, commitCount) => {
     for (var i = 1; i <= ((commitCount + 99) / 100); i++) {
         await sleepNow(sleepTime)
         const url = `https://api.github.com/repos/${fullname}/commits?per_page=100&page=${i}`;
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            'headers': {
+              'Authorization': `token ${my_token}` 
+            }
+        });
         const data = await response.json();
         for (const commit of data) {
             if (!authors.includes(commit.commit.author.email) && !commit.commit.author.email.includes("noreply.github.com")) {
@@ -112,9 +125,11 @@ async function SearchRepo() {
     var keyword = document.getElementById("searchKey").value;
     var language = document.getElementById("codeLang").value;
     var month = document.getElementById("monNum").value;
-    for (var j = 1; j <= 10; j++) {
+    var j = 1
+    // for (var j = 1; j <= 10; j++) {
         const repositories = await getRepositories(keyword, language, j);
 
+        var i = 0
         for (const repo of repositories) {
             const commitsLastMonth = await getCommitsCount(repo.full_name, month);
 
@@ -122,15 +137,24 @@ async function SearchRepo() {
                 const authors = await getCommitsAuthors(repo.full_name, commitsLastMonth);
                 console.log(`${repo.full_name}: ${commitsLastMonth} commits in the last month`);
             }
+            sleepNow(sleepTime * commitsLastMonth)
+            // i ++
+            // if (i >= 10)
+            //     break
         }
-    }
+        // break
+    // }
 
-    var userResponse = confirm("Search is finished. You want to save the result?");
-
-    if (userResponse) {
-        const csvdata = csvmaker(repoInfo, ",", "\n");
-        download(csvdata);
+    if (repoInfo == null) {
+        alert("Search is finished. No result")
     } else {
-    // The user clicked Cancel, so don't delete the file.
+        var userResponse = confirm("Search is finished. You want to save the result?");
+    
+        if (userResponse) {
+            const csvdata = csvmaker(repoInfo, ",", "\n");
+            download(csvdata);
+        } else {
+        // The user clicked Cancel, so don't delete the file.
+        }
     }
 }
